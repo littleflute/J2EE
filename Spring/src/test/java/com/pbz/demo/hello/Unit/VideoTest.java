@@ -2,19 +2,20 @@ package com.pbz.demo.hello.Unit;
 
 import java.io.File;
 
-import org.junit.AfterClass;
 import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import com.pbz.demo.hello.controller.ImageController;
 import com.pbz.demo.hello.util.ExecuteCommand;
+import com.pbz.demo.hello.util.FileUtil;
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @SpringBootTest()
 public class VideoTest {
 	
@@ -31,7 +32,7 @@ public class VideoTest {
 	private static final boolean isWindows = System.getProperty("os.name").startsWith("Windows");
 	
 	
-	@BeforeClass
+	@BeforeAll
 	public static void setup() throws Exception {
 		
 		File resourcesDirectory = new File("src/test/resources");
@@ -43,7 +44,7 @@ public class VideoTest {
 		copyFile(scriptFile.getPath(), System.getProperty("user.dir"));
 	}
 	 
-	@AfterClass
+	@AfterAll
 	public static void clearENV() throws Exception {
 		
 		File srtFile = new File(System.getProperty("user.dir") + "/" + FILENAME_SRT);
@@ -164,6 +165,9 @@ public class VideoTest {
 		
 		String cmd = resourcePath + "/" + "copy" + scriptSuffix;
 		String[] args = {Source, Destination};
+		if (!isWindows) {
+			FileUtil.chmod("755 " + cmd);
+		}
 		if (!ExecuteCommand.executeCommand(cmd, args)) {
 			return false;
 		}		

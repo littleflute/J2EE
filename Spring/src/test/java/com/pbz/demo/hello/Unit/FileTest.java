@@ -11,23 +11,28 @@ import java.io.InputStream;
 import java.util.Map;
 import java.util.Properties;
 
-import org.junit.AfterClass;
 import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.web.multipart.MultipartFile;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
+
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import com.pbz.demo.hello.controller.FileController;
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @SpringBootTest()
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class FileTest {
 
 	@Autowired
@@ -38,7 +43,7 @@ public class FileTest {
 	private static String DOWNLOAD_URL;
 	private static String FILENAME_WEBPAGE; 
 	
-	@BeforeClass
+	@BeforeAll
 	public static void setup() throws Exception {
 
 		Properties properties=new Properties();  
@@ -61,7 +66,7 @@ public class FileTest {
 		uploadFile.delete();
 	}
 
-	@AfterClass
+	@AfterAll
 	public static void teardown() throws Exception {
 		
 		File jsonFile = new File(System.getProperty("user.dir") + "/" + FILENAME_JSON);
@@ -75,7 +80,9 @@ public class FileTest {
 		uploadFile.delete();
 	}
 
+
 	@Test
+	@Order(1)
 	public void TEST_saveJson2File() throws Exception {
 
 		File jsonFile = new File(System.getProperty("user.dir") + "/" + FILENAME_JSON);
@@ -91,6 +98,7 @@ public class FileTest {
 
 	
 	@Test
+	@Order(2)
 	@SuppressWarnings("unchecked")
 	public void TEST_downLoadFileToServer() throws Exception {
 
@@ -113,6 +121,7 @@ public class FileTest {
 	}
 	
 	@Test
+	@Order(3)
 	@SuppressWarnings("unchecked")
 	public void TEST_uploadFile() throws Exception {
 		
@@ -151,6 +160,7 @@ public class FileTest {
 	}
 	
 	@Test
+	@Order(4)
 	@SuppressWarnings("unchecked")
 	public void TEST_getResourceOnServer() throws Exception {
 		
