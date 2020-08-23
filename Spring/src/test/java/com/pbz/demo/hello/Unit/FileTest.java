@@ -103,10 +103,9 @@ public class FileTest {
 	public void TEST_downLoadFileToServer() throws Exception {
 
 		File audioFile = new File(System.getProperty("user.dir") + "/" + FILENAME_WEBPAGE);
-
-		String url = DOWNLOAD_URL + FILENAME_WEBPAGE;//https://littleflute.github.io/english/NewConceptEnglish/Book2/5.mp3
+		
 		System.out.println("Begin test downLoadFileToServer");
-		Map<String, Object> respObject = (Map<String, Object>) fileOperator.downLoadFileToServer(url);
+		Map<String, Object> respObject = (Map<String, Object>) fileOperator.downLoadFileToServer(DOWNLOAD_URL, FILENAME_WEBPAGE);
 
 		System.out.println(respObject.toString());
 		Assert.assertEquals(System.getProperty("user.dir") + "/" +FILENAME_WEBPAGE, respObject.get("pathOnServer").toString());

@@ -108,21 +108,27 @@ public class FileController {
 
 	@ApiOperation(value = "下载文件", notes = "下载文件接口")
 	@ApiImplicitParams({
-		@ApiImplicitParam(name = "url", value = "source url", paramType = "query", required = true, dataType = "string", defaultValue="https://littleflute.github.io/english/NewConceptEnglish/Book2/5.mp3")})
+		@ApiImplicitParam(name = "url", value = "source url", paramType = "query", required = true, dataType = "string", defaultValue="https://sports.163.com/20/0802/21/FJ2BRHEC0005877V.html"),
+		@ApiImplicitParam(name = "filename", value = "save file name", paramType = "query", required = true, dataType = "string", defaultValue="163news.html")})
 	@RequestMapping(value = "/download", method = RequestMethod.GET)
 	@ResponseBody
-	public Object downLoadFileToServer(@RequestParam("url") String url) throws Exception {
+	public Object downLoadFileToServer(@RequestParam("url") String url, @RequestParam("filename") String outputFileName) throws Exception {
 		Map<String, Object> resMap = new HashMap<String, Object>();
 		int index = url.lastIndexOf("/");
-		String fileName = "";
+		String sourceFileName = "";
 		if (index > 0) {
-			fileName = url.substring(index + 1);
+			sourceFileName = url.substring(index + 1);
 		}
-		if (fileName.trim().length() == 0 || fileName.indexOf(".") == -1) {
+		if (sourceFileName.trim().length() == 0 || sourceFileName.indexOf(".") == -1) {
 			resMap.put("error", "The url " + url + " is not correct!");
 			return resMap;
 		}
-		String downloadFilePath = System.getProperty("user.dir") + "/" + fileName;
+		if (outputFileName.indexOf(".") == -1) {
+			resMap.put("error", "The output file name " + outputFileName + " is not correct!");
+			return resMap;
+		}
+
+		String downloadFilePath = System.getProperty("user.dir") + "/" + outputFileName;
 		long s = System.currentTimeMillis();
 		url = url.replaceAll(" ", "%20");
 		URL httpUrl = new URL(url);
@@ -130,7 +136,7 @@ public class FileController {
 		long e = System.currentTimeMillis();
 		resMap.put("code", 200);
 		resMap.put("message", "文件下载成功, 花费时间:" + (e - s) + "ms");
-		resMap.put("filename", fileName);
+		resMap.put("filename", outputFileName);
 		resMap.put("pathOnServer", downloadFilePath);
 
 		return resMap;

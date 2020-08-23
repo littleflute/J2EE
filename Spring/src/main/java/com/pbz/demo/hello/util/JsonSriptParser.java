@@ -212,11 +212,19 @@ public final class JsonSriptParser {
 		String type = jObj.getString("type");
 
 		JSONObject attributeObj = jObj.getJSONObject("attribute");
-		int X0 = attributeObj.getInt("left");// 初始X0坐标
-		Color color = null;
+		int x1 = attributeObj.getInt("x1");// 初始X1坐标
+		int y1 = attributeObj.getInt("y1");
+		int x2 = attributeObj.getInt("x2");
+		int y2 = attributeObj.getInt("y2");
+
+		String name = attributeObj.getString("name");
+		float fSize = attributeObj.getFloat("size");
 		if (attributeObj.has("color")) {
 			String cr = attributeObj.getString("color");
-			color = getColor(cr);
+			if (cr != null) {
+				Color color = getColor(cr);
+				gp2d.setColor(color);
+			}
 		}
 		JSONObject actionObj = jObj.getJSONObject("action");
 		String actionTrace = actionObj.getString("trace"); // 目前只按照二次函数曲线来解析 Y=aX^2+bX+c
@@ -226,57 +234,45 @@ public final class JsonSriptParser {
 		String rangeArray[] = rangeValue.split(",");
 		String startFrameNumber = rangeArray[0].substring(1);
 		int sfNum = Integer.parseInt(startFrameNumber);
-		float X = X0 + (number - sfNum) * step;
+		float X = x1 + (number - sfNum) * step;
 		String parm[] = actionTrace.split("\\+");
 		float a = Float.parseFloat(parm[0].substring(2, parm[0].indexOf("*")));
 		float b = Float.parseFloat(parm[1].substring(0, parm[1].indexOf("*")));
 		float c = Float.parseFloat(parm[2]);
 		float Y = (float) (a * X * X + b * X + c);
 
+		if (name != null && !name.trim().isEmpty()) {
+			if (!"text".equalsIgnoreCase(type) && !"picture".equalsIgnoreCase(type)) {
+				gp2d.drawString(name, X, Y);
+			}
+		}
+
 		if ("rayline".equalsIgnoreCase(type)) {
-			int right = attributeObj.getInt("right");
-			int bottom = attributeObj.getInt("bottom");
 			if (attributeObj.has("size")) {
-				float fSize = attributeObj.getFloat("size");
 				BasicStroke bs = new BasicStroke(fSize, BasicStroke.CAP_ROUND, BasicStroke.JOIN_BEVEL);
 				gp2d.setStroke(bs);
 			}
-			gp2d.setColor(color);
-			gp2d.drawLine((int) X, (int) Y, right, bottom);
+			gp2d.drawLine((int) X, (int) Y, x2, y2);
 
 		} else if ("line".equalsIgnoreCase(type)) {
-			int X2 = attributeObj.getInt("right");
-			int bottom = attributeObj.getInt("bottom");
-			int top = attributeObj.getInt("top");
-			float XX = X2 + (number - sfNum) * step;
-			float YY = (float) (a * XX * XX + b * XX + c + bottom - top);
+			float XX = x2 + (number - sfNum) * step;
+			float YY = (float) (a * XX * XX + b * XX + c + y2 - y1);
 			if (attributeObj.has("size")) {
-				float fSize = attributeObj.getFloat("size");
 				BasicStroke bs = new BasicStroke(fSize, BasicStroke.CAP_ROUND, BasicStroke.JOIN_BEVEL);
 				gp2d.setStroke(bs);
 			}
-			gp2d.setColor(color);
 			gp2d.drawLine((int) X, (int) Y, (int) XX, (int) YY);
 
 		} else if ("circle".equalsIgnoreCase(type)) {
-			int width = attributeObj.getInt("width");
-			int height = attributeObj.getInt("height");
-			gp2d.setColor(color);
-			gp2d.fillOval((int) X, (int) Y, width, height);
+			gp2d.fillOval((int) X, (int) Y, x2, y2);
 		} else if ("rect".equalsIgnoreCase(type)) {
-			int width = attributeObj.getInt("width");
-			int height = attributeObj.getInt("height");
-			gp2d.setColor(color);
-			gp2d.fill3DRect((int) X, (int) Y, width, height, false);
+			gp2d.fill3DRect((int) X, (int) Y, x2, y2, false);
 		} else if ("text".equalsIgnoreCase(type)) {
-			String content = attributeObj.getString("content");
-			int size = attributeObj.getInt("size");
-			gp2d.setColor(color);
-			Font font = new Font("黑体", Font.BOLD, size);
+			Font font = new Font("黑体", Font.BOLD, (int) fSize);
 			gp2d.setFont(font);
-			gp2d.drawString(content, X, Y);
+			gp2d.drawString(name, X, Y);
 		} else if ("picture".equalsIgnoreCase(type)) {
-			String picFile = attributeObj.getString("name");
+			String picFile = name;
 			File imgFile = new File(picFile);
 			if (imgFile.exists()) {
 				Image img = null;
@@ -285,8 +281,8 @@ public final class JsonSriptParser {
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
-				int w = attributeObj.getInt("width");
-				int h = attributeObj.getInt("heigth");
+				int w = x2;
+				int h = y2;
 				gp2d.drawImage(img, (int) X, (int) Y, w, h, null);
 			} else {
 				System.out.println("WARNING: The file " + imgFile.getName() + " doesn't exist!");

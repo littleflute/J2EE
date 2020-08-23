@@ -25,6 +25,7 @@ import springfox.documentation.annotations.ApiIgnore;
 @Api(tags = "通用功能接口")
 public class CommonController {
 	private static Semaphore semaphore = new Semaphore(1);
+	private static final boolean isWindows = System.getProperty("os.name").startsWith("Windows");
 
 	@ApiOperation(value = "执行服务器端命令", notes = "执行服务器端命令")
 	@ApiImplicitParams({
@@ -39,7 +40,23 @@ public class CommonController {
 		}
 		logFile.createNewFile();
 
-		ExecuteCommand.executeCommand(cmd, null, new File("."), logFile.getAbsolutePath());
+		try {
+			ExecuteCommand.executeCommand(cmd, null, new File("."), logFile.getAbsolutePath());
+		} catch (Exception e) {
+			String cmd0 = "sh";
+			String cmd1 = "-c";
+			if (isWindows) {
+				cmd0 = "cmd";
+				cmd1 = "/c";
+			}
+			String[] cmds = new String[cmd.length + 2];
+			cmds[0] = cmd0;
+			cmds[1] = cmd1;
+			for (int i = 0; i < cmd.length; i++) {
+				cmds[i+2] = cmd[i];
+			}
+			ExecuteCommand.executeCommand(cmds, null, new File("."), logFile.getAbsolutePath());
+		}
 		Thread.sleep(100);
 		String strOut = FileUtil.readAllBytes(logFile.getAbsolutePath());
 		status.put("Status", "OK!");
