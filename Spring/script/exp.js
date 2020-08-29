@@ -8,7 +8,7 @@ app.get('/', function(req, res) {
 })
 
 app.get('/video', function(req, res) {
-	const path = 'assets/1.mp4'
+	const path = 'assets/1.webm'
 	const stat = fs.statSync(path)
 	const fileSize = stat.size
 	const range = req.headers.range
@@ -22,14 +22,14 @@ app.get('/video', function(req, res) {
 			'Content-Range': `bytes ${start}-${end}/${fileSize}`,
 			'Accept-Ranges': 'bytes',
 			'Content-Length': chunksize,
-			'Content-Type': 'video/mp4',
+			'Content-Type': 'video/webm',
 		}
 		res.writeHead(206, head)
 		file.pipe(res)
 	} else {
 		const head = {
 			'Content-Length': fileSize,
-			'Content-Type': 'video/mp4',
+			'Content-Type': 'video/webm',
 		}
 		res.writeHead(200, head)
 		fs.createReadStream(path).pipe(res)
