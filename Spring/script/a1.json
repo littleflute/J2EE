@@ -1,0 +1,53 @@
+{
+    "request": {
+        "version": "0.0.2",
+        "width": 1920,
+        "height": 1080,
+        "music": "as20200823-2.mp3",
+        "rate": "1",
+        "frames": [ 
+            {
+                "number": "1", 
+                "time": 407, 
+                "objects": [
+                    {
+                        "text": "Postponement of Tokyo Olympics Creates Problem for Ticket Buyers", 
+                        "x": 200,
+                        "y": 300,
+                        "size": 100,
+                        "color": "255,255,0"
+                    },
+                    {
+                        "text": "as20200823-2", 
+                        "x": 200,
+                        "y": 400,
+                        "size": 80,
+                        "color": "255,255,125"
+                    },
+                    {
+                        "text": "英语慢速听力泛听练习", 
+                        "x": 200,
+                        "y": 500,
+                        "size": 80,
+                        "color": "123,255,125"
+                    },
+                    {
+                        "picture": "as22.jpg",
+                        "x": 200,
+                        "y": 500,
+                        "width":555,
+                        "heigth":444
+                    },
+                    {
+                        "text": "如需要文本，请到英语群留言索取！", 
+                        "x": 200,
+                        "y": 800,
+                        "size": 80,
+                        "color": "123,255,222"
+                    }, 
+                ],
+                "backgroundPicture": "as21.jpg"
+            }
+        ]
+    }
+}
