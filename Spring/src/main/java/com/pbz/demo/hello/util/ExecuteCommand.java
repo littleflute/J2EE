@@ -1,6 +1,10 @@
 package com.pbz.demo.hello.util;
 
 import java.io.File;
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.Socket;
+import java.net.UnknownHostException;
 
 public final class ExecuteCommand {
 
@@ -43,6 +47,27 @@ public final class ExecuteCommand {
 			throw new Exception(e);
 		}
 		return true;
+	}
+
+	public static boolean isPortUsing(String host, int port) throws UnknownHostException {
+		boolean flag = false;
+		InetAddress Address = InetAddress.getByName(host);
+		try {
+			Socket socket = new Socket(Address, port);
+			flag = true;
+		} catch (IOException e) {
+
+		}
+		return flag;
+	}
+
+	public static boolean isLocalPortUsing(int port) {
+		boolean flag = true;
+		try {
+			flag = isPortUsing("127.0.0.1", port);
+		} catch (Exception e) {
+		}
+		return flag;
 	}
 
 }
