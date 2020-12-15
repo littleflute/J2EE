@@ -44,7 +44,7 @@ public class SubtitleImageService {
 			int nSecondsOfSubtitle = (info.end - info.star) / 1000;
 			int red 	= 255;//(int) (Math.random() * 255);
 			int green 	= 125;//(int) (Math.random() * 255);
-			int blue 	= 25;//(int) (Math.random() * 255);
+			int blue 	= 25; //(int) (Math.random() * 255);
 			for (int j = 0; j < nSecondsOfSubtitle; j++) {
 				String destImageFile = System.getProperty("user.dir") + "/" + Integer.toString(index + 1) + ".jpg";
 				BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
