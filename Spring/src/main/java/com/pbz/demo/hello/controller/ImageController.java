@@ -124,11 +124,11 @@ public class ImageController {
 		mv.setViewName("video.html");
 		String strResultMsg = "将字幕文件与音频文件合成视频文件出错！";
 		String path = System.getProperty("user.dir") + "/" + subtitleFile;
-		int number = subtitleImageService.saveSubtitleToImageFile(path, 800, 600);
+		int number = subtitleImageService.saveSubtitleToImageFile(path, 1960, 1080);
 		if (number > 0) {
 			String suffix = isWindows ? ".bat" : ".sh";
 			String cmd = System.getProperty("user.dir") + "/" + "jpg2video" + suffix;
-			String[] args = { "800", "600", "1" };
+			String[] args = { "1960", "1080", "1" };
 			ExecuteCommand.executeCommand(cmd, args);
 			String ffmpegPath = "ffmpeg";
 			if (!isWindows) {
