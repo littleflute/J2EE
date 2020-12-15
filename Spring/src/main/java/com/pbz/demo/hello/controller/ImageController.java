@@ -113,7 +113,7 @@ public class ImageController {
 
 	}
 
-	@ApiOperation(value = "音频合成字幕生成视频", notes = "将音频合成字幕生成视频")
+	@ApiOperation(value = "音频合成字幕生成视频(mp3+srt)", notes = "将音频合成字幕生成视频")
 	@ApiImplicitParams({
 			@ApiImplicitParam(name = "subtitlefile", value = "subtitle file (*.srt)", paramType = "query", required = true, dataType = "string", defaultValue = "example.srt"),
 			@ApiImplicitParam(name = "audiofile", value = "audio file (*.mp3)", paramType = "query", required = true, dataType = "string", defaultValue = "example.mp3") })
